@@ -55,3 +55,45 @@ body {
 .animate-in {
   animation: grid-fade 0.5s ease-out forwards;
 }
+
+/* ASCII Mode Easter Egg */
+body.ascii-mode {
+  --font-display: var(--font-jetbrains-mono) !important;
+  --font-body: var(--font-jetbrains-mono) !important;
+  background-color: #000000 !important;
+  color: #ccff00 !important;
+  text-shadow: 0 0 5px rgba(204, 255, 0, 0.5);
+}
+
+body.ascii-mode::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+body.ascii-mode * {
+  border-color: #ccff00 !important;
+  box-shadow: none !important;
+}
+
+body.ascii-mode img, body.ascii-mode svg {
+  filter: sepia(1) hue-rotate(40deg) saturate(5) contrast(2) !important;
+}
+
+/* CMDK Custom Styles */
+[cmdk-item][data-selected="true"] {
+  background-color: var(--color-neon);
+  color: var(--color-dark) !important;
+}
+[cmdk-item][data-selected="true"] svg {
+  color: var(--color-dark) !important;
+}

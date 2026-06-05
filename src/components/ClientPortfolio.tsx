@@ -11,6 +11,7 @@ import { Marquee } from "./ui/marquee";
 import { Terminal } from "./ui/terminal";
 import { LiveData } from "./ui/live-data";
 import { PhysicsGrid } from "./ui/physics-grid";
+import { WebGLBackground } from "./ui/webgl-background";
 
 type Repo = {
   id: number;
@@ -37,11 +38,12 @@ export default function ClientPortfolio({
 }) {
   const [activeTab, setActiveTab] = useState<"ABOUT" | "PROJECTS">("ABOUT");
   
-  // Parallax calculations
+  // Parallax calculations (extended for longer scroll)
   const { scrollYProgress } = useScroll();
-  const yHero = useTransform(scrollYProgress, [0, 1], [0, 400]);
-  const opacityHero = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
-  const yContent = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const yHero = useTransform(scrollYProgress, [0, 1], [0, 800]);
+  const opacityHero = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
+  const scaleHero = useTransform(scrollYProgress, [0, 0.25], [1, 0.95]);
+  const yContent = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
     <SmoothScroll>
@@ -71,11 +73,13 @@ export default function ClientPortfolio({
           {/* Main Content Area */}
           <main className="p-6 md:p-12 lg:p-24 max-w-[1440px]">
             
-            {/* HERO SECTION with Parallax */}
-            <motion.section 
-              style={{ y: yHero, opacity: opacityHero }}
-              className="space-y-6 mb-24 relative"
-            >
+            {/* HERO SECTION with Extended Parallax */}
+            <div className="h-[150vh] relative w-full">
+              <WebGLBackground />
+              <motion.section 
+                style={{ y: yHero, opacity: opacityHero, scale: scaleHero }}
+                className="space-y-6 pt-24 sticky top-24"
+              >
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -98,7 +102,8 @@ export default function ClientPortfolio({
                 <span className="text-transparent stroke-white" style={{ WebkitTextStroke: "2px #2E2E2E" }}>SYSTEM_</span><br />
                 DEVELOPER
               </motion.h1>
-            </motion.section>
+              </motion.section>
+            </div>
 
             {/* INTERACTIVE EXPANSION SECTION */}
             <motion.div style={{ y: yContent }} className="space-y-12 mb-24">
