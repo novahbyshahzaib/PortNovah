@@ -295,6 +295,16 @@ export default function ClientPortfolio({
 
           </main>
         </div>
+        
+        {/* Floating Action Button for CMDK (Mobile & Desktop) */}
+        <button 
+          onClick={() => document.dispatchEvent(new Event("open-cmdk"))}
+          className="fixed bottom-6 right-6 z-[60] bg-neon text-black px-4 py-3 font-mono font-bold uppercase flex items-center gap-2 hover:bg-white transition-colors border-2 border-black shadow-[4px_4px_0px_0px_#2E2E2E]"
+        >
+          <TerminalIcon className="w-5 h-5" />
+          <span className="hidden md:inline">CMD + K</span>
+          <span className="md:hidden">MENU</span>
+        </button>
       </div>
     </SmoothScroll>
   );

@@ -16,8 +16,15 @@ export function CommandMenu() {
         setOpen((open) => !open);
       }
     };
+    const openMenu = () => setOpen(true);
+    
     document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+    document.addEventListener("open-cmdk", openMenu);
+    
+    return () => {
+      document.removeEventListener("keydown", down);
+      document.removeEventListener("open-cmdk", openMenu);
+    };
   }, []);
 
   if (!open) return null;
