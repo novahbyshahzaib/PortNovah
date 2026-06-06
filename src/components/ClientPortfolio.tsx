@@ -74,12 +74,6 @@ export default function ClientPortfolio({
                 NOVAH SYSTEM
               </div>
             </Magnetic>
-            <div className="md:hidden w-full px-4">
-               <UptimeClock />
-            </div>
-            <div className="hidden md:block fixed bottom-24 -left-16 rotate-90 origin-bottom-left">
-               <UptimeClock />
-            </div>
           </aside>
 
           {/* Main Content Area */}
@@ -96,12 +90,15 @@ export default function ClientPortfolio({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-block border-2 border-neon px-3 py-1 mb-4 bg-neon/10 backdrop-blur-sm"
+                className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-4"
               >
-                <span className="font-mono text-neon text-sm font-bold uppercase tracking-widest flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-neon"></div>
-                  STATUS: ONLINE
-                </span>
+                <div className="inline-block border-2 border-neon px-3 py-1 bg-neon/10 backdrop-blur-sm">
+                  <span className="font-mono text-neon text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-neon"></div>
+                    STATUS: ONLINE
+                  </span>
+                </div>
+                <UptimeClock />
               </motion.div>
               
               <motion.h1 

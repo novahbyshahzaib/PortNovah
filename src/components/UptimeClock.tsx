@@ -39,7 +39,7 @@ export function UptimeClock() {
   if (!time) return null;
 
   return (
-    <div className="hidden md:flex items-center gap-4 font-mono text-xs text-gray-400 uppercase tracking-widest border border-gray-light bg-black px-4 py-2 mt-4 self-start">
+    <div className="flex items-center gap-4 font-mono text-xs text-gray-400 uppercase tracking-widest border border-gray-light bg-black px-4 py-2">
       <div className="flex items-center gap-2">
         <Clock className="w-3 h-3 text-neon" />
         <span>LOCAL: {time}</span>
