@@ -12,6 +12,7 @@ import { Terminal } from "./ui/terminal";
 import { LiveData } from "./ui/live-data";
 import { PhysicsGrid } from "./ui/physics-grid";
 import { WebGLBackground } from "./ui/webgl-background";
+import ViewCounter from "./ui/view-counter";
 
 type Repo = {
   id: number;
@@ -287,9 +288,12 @@ export default function ClientPortfolio({
               <div className="font-display text-4xl font-bold tracking-tighter mb-4 md:mb-0 text-white/20">
                 NOVAH
               </div>
-              <div className="font-mono text-sm text-gray-500 text-right">
-                © {new Date().getFullYear()} ALL RIGHTS RESERVED.<br/>
-                SYSTEM_VERSION: 2.0.0
+              <div className="flex items-center gap-4">
+                <ViewCounter />
+                <div className="font-mono text-sm text-gray-500 text-right">
+                  © {new Date().getFullYear()} ALL RIGHTS RESERVED.<br/>
+                  SYSTEM_VERSION: 2.0.0
+                </div>
               </div>
             </motion.footer>
 

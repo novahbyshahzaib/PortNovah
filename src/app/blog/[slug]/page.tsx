@@ -1,68 +1,80 @@
+import { sql } from '@vercel/postgres';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { getBlogPostBySlug, getBlogPosts } from '@/lib/blog';
+import { Terminal, Calendar, ShieldAlert } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { CustomCursor } from '@/components/ui/cursor';
 import { NoiseOverlay } from '@/components/ui/noise';
-import { SmoothScroll } from '@/components/ui/smooth-scroll';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 
-export async function generateStaticParams() {
-  const posts = getBlogPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+export const revalidate = 0; // Dynamic DB fetch
+
+async function getBlogBySlug(slug: string) {
+  if (!process.env.POSTGRES_URL) return null;
+  try {
+    const { rows } = await sql`SELECT * FROM blogs WHERE slug = ${slug} LIMIT 1`;
+    return rows[0] || null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
-// Minimalist brutalist components for MDX
-const components = {
-  h1: (props: any) => <h1 className="font-display text-4xl md:text-5xl font-bold uppercase mt-12 mb-6 tracking-tighter border-b-4 border-gray-light pb-4" {...props} />,
-  h2: (props: any) => <h2 className="font-display text-2xl md:text-3xl font-bold uppercase mt-10 mb-4 tracking-tight" {...props} />,
-  h3: (props: any) => <h3 className="font-display text-xl font-bold uppercase mt-8 mb-4" {...props} />,
-  p: (props: any) => <p className="font-body text-lg leading-relaxed text-gray-300 mb-6" {...props} />,
-  ul: (props: any) => <ul className="list-disc list-inside font-body text-lg text-gray-300 mb-6 space-y-2 border-l-2 border-neon pl-4" {...props} />,
-  li: (props: any) => <li {...props} />,
-  a: (props: any) => <a className="text-neon hover:underline underline-offset-4" {...props} />,
-  blockquote: (props: any) => <blockquote className="border-l-4 border-neon bg-gray-light/20 p-6 italic my-8 font-serif text-xl" {...props} />,
-  code: (props: any) => <code className="font-mono text-sm bg-gray-light/50 text-neon px-1 py-0.5" {...props} />,
-  pre: (props: any) => <pre className="bg-gray-dark border-2 border-gray-light p-6 overflow-x-auto my-8"><code className="font-mono text-sm text-gray-300" {...props} /></pre>,
-};
-
-export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
-  const resolvedParams = await params;
-  const post = getBlogPostBySlug(resolvedParams.slug);
+export default async function BlogPost({ params }: { params: { slug: string } }) {
+  const post = await getBlogBySlug(params.slug);
 
   if (!post) {
-    notFound();
+    return (
+      <main className="min-h-screen bg-black text-[#0f0] font-mono flex items-center justify-center p-6">
+        <NoiseOverlay />
+        <CustomCursor />
+        <div className="text-center space-y-6 relative z-10">
+          <Terminal className="w-16 h-16 mx-auto opacity-50" />
+          <h1 className="text-4xl font-bold uppercase tracking-widest">404_NOT_FOUND</h1>
+          <p className="text-zinc-500 uppercase tracking-widest">Signal lost. The data block you requested does not exist.</p>
+          <Link href="/blog" className="inline-block mt-8 border border-[#0f0] px-6 py-3 hover:bg-[#0f0] hover:text-black transition-colors uppercase tracking-widest">
+            Return to Feed
+          </Link>
+        </div>
+      </main>
+    );
   }
 
   return (
-    <SmoothScroll>
-      <CustomCursor />
+    <main className="min-h-screen bg-black text-[#0f0] font-mono selection:bg-[#0f0] selection:text-black overflow-hidden relative">
       <NoiseOverlay />
+      <CustomCursor />
       
-      <div className="min-h-screen bg-black text-white font-body selection:bg-neon selection:text-black overflow-hidden relative">
-        <div className="p-6 md:p-12 lg:p-24 max-w-3xl mx-auto space-y-12">
-          
-          <header className="space-y-8 border-b-2 border-gray-light pb-8">
-            <Link href="/blog" className="inline-block border-2 border-gray-light px-4 py-2 hover:border-neon hover:text-neon transition-colors font-mono text-sm uppercase">
-              ← Back to Logs
-            </Link>
-            
-            <div className="space-y-4">
-              <h1 className="font-display text-5xl md:text-7xl font-bold uppercase tracking-tighter leading-none">{post.title}</h1>
-              <div className="flex items-center space-x-4 font-mono text-sm text-gray-400">
-                <span className="border-2 border-gray-light px-2 py-1">TIMESTAMP: {post.date}</span>
-                <span className="border-2 border-gray-light px-2 py-1 bg-neon text-black font-bold">AUTHOR: NOVAH</span>
-              </div>
+      <div className="max-w-3xl mx-auto px-6 py-24 relative z-10">
+        <Link href="/blog" className="inline-flex items-center gap-2 mb-12 text-zinc-500 hover:text-[#0f0] transition-colors uppercase tracking-widest text-sm">
+          &lt; Back_to_Feed
+        </Link>
+
+        <article>
+          <header className="mb-12 space-y-6 border-b border-[#0f0]/20 pb-12">
+            <h1 className="text-4xl md:text-6xl font-bold uppercase tracking-tighter leading-tight">
+              {post.title}
+            </h1>
+            <div className="flex items-center gap-6 text-sm text-zinc-500 tracking-widest uppercase">
+              <span className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                {new Date(post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </span>
+              {post.is_dev && (
+                <span className="flex items-center gap-2 text-black bg-[#0f0] px-3 py-1 font-bold">
+                  <ShieldAlert className="w-4 h-4" />
+                  VERIFIED_DEV
+                </span>
+              )}
             </div>
           </header>
 
-          <article className="pb-24">
-            <MDXRemote source={post.content} components={components} />
-          </article>
-
-        </div>
+          <div className="prose prose-invert prose-green max-w-none prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-[#0f0]/20 prose-a:text-[#0f0] prose-a:no-underline hover:prose-a:underline">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {post.content}
+            </ReactMarkdown>
+          </div>
+        </article>
       </div>
-    </SmoothScroll>
+    </main>
   );
 }

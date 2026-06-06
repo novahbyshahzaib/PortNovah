@@ -34,7 +34,7 @@ async function getRepos() {
   }
 
   const data = await res.json();
-  return data
+  const formattedRepos = data
     .filter((repo: any) => !EXCLUDED_REPOS.includes(repo.name))
     .map((repo: any) => ({
       id: repo.id,
@@ -45,6 +45,19 @@ async function getRepos() {
       language: repo.language,
       stargazers_count: repo.stargazers_count,
     }));
+
+  // Manually add the missing AWP repository
+  formattedRepos.push({
+    id: 999999999,
+    name: "AWP",
+    description: "Advanced Web Programming application with sophisticated frontend architecture.",
+    html_url: "https://github.com/novahbyshahzaib/AWP",
+    homepage: "https://awp-novah.vercel.app", // Placeholder, user didn't provide live link
+    language: "TypeScript",
+    stargazers_count: 0,
+  });
+
+  return formattedRepos;
 }
 
 export default async function Home() {
