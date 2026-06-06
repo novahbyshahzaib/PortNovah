@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Archivo_Narrow, Inter, JetBrains_Mono } from "next/font/google";
 import { CommandMenu } from "@/components/ui/command-menu";
 import InstallPrompt from "@/components/InstallPrompt";
+import { KonamiHack } from "@/components/ui/konami-hack";
+import { QuakeConsole } from "@/components/ui/quake-console";
+import { CursorParticles } from "@/components/ui/cursor-particles";
+import { MatrixRain } from "@/components/ui/matrix-rain";
+import { SystemDiagnostics } from "@/components/SystemDiagnostics";
 import "./globals.css";
 
 const archivoNarrow = Archivo_Narrow({
@@ -57,9 +62,14 @@ export default function RootLayout({
             `,
           }}
         />
+        <CursorParticles />
+        <MatrixRain />
         <CommandMenu />
+        <SystemDiagnostics />
         {children}
         <InstallPrompt />
+        <KonamiHack />
+        <QuakeConsole />
       </body>
     </html>
   );

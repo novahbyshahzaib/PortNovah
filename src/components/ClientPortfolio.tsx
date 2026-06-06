@@ -13,6 +13,11 @@ import { LiveData } from "./ui/live-data";
 import { PhysicsGrid } from "./ui/physics-grid";
 import { WebGLBackground } from "./ui/webgl-background";
 import ViewCounter from "./ui/view-counter";
+import { InteractiveTerminal } from "./InteractiveTerminal";
+import { TraceRoute } from "./TraceRoute";
+import { GlitchHover } from "./ui/glitch-hover";
+import { ActivityHeatmap } from "./ActivityHeatmap";
+import { UptimeClock } from "./UptimeClock";
 
 type Repo = {
   id: number;
@@ -69,6 +74,12 @@ export default function ClientPortfolio({
                 NOVAH SYSTEM
               </div>
             </Magnetic>
+            <div className="md:hidden w-full px-4">
+               <UptimeClock />
+            </div>
+            <div className="hidden md:block fixed bottom-24 -left-16 rotate-90 origin-bottom-left">
+               <UptimeClock />
+            </div>
           </aside>
 
           {/* Main Content Area */}
@@ -103,6 +114,14 @@ export default function ClientPortfolio({
                 <span className="text-transparent stroke-white" style={{ WebkitTextStroke: "2px #2E2E2E" }}>SYSTEM_</span><br />
                 DEVELOPER
               </motion.h1>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              >
+                <TraceRoute />
+              </motion.div>
               </motion.section>
             </div>
 
@@ -111,7 +130,7 @@ export default function ClientPortfolio({
               <Marquee />
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <Terminal />
+                <InteractiveTerminal />
                 <LiveData />
               </div>
 
@@ -195,21 +214,23 @@ export default function ClientPortfolio({
                         transition={{ delay: idx * 0.1 }}
                       >
                         <Magnetic>
-                          <a 
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group block bg-black border-2 border-gray-light hover:border-neon hover:shadow-[8px_8px_0px_0px_#ccff00] transition-all duration-300 relative overflow-hidden h-full"
-                          >
-                            <div className="h-10 border-b-2 border-gray-light flex justify-between items-center px-4 group-hover:bg-neon group-hover:border-neon transition-colors duration-300">
-                              <span className="font-mono text-gray-400 group-hover:text-black font-bold text-sm transition-colors">SYS.0{idx + 1}</span>
-                              <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-black transition-colors" />
-                            </div>
-                            <div className="p-6">
-                              <h3 className="font-display text-2xl font-bold uppercase mb-2 group-hover:text-neon transition-colors duration-300">{link.title}</h3>
-                              <p className="font-mono text-sm text-gray-400">{link.description}</p>
-                            </div>
-                          </a>
+                          <GlitchHover className="h-full">
+                            <a 
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group block bg-black border-2 border-gray-light hover:border-neon hover:shadow-[8px_8px_0px_0px_#ccff00] transition-all duration-300 relative overflow-hidden h-full"
+                            >
+                              <div className="h-10 border-b-2 border-gray-light flex justify-between items-center px-4 group-hover:bg-neon group-hover:border-neon transition-colors duration-300">
+                                <span className="font-mono text-gray-400 group-hover:text-black font-bold text-sm transition-colors">SYS.0{idx + 1}</span>
+                                <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-black transition-colors" />
+                              </div>
+                              <div className="p-6">
+                                <h3 className="font-display text-2xl font-bold uppercase mb-2 group-hover:text-neon transition-colors duration-300">{link.title}</h3>
+                                <p className="font-mono text-sm text-gray-400">{link.description}</p>
+                              </div>
+                            </a>
+                          </GlitchHover>
                         </Magnetic>
                       </motion.div>
                     ))}
@@ -233,50 +254,54 @@ export default function ClientPortfolio({
                         viewport={{ once: true }}
                         transition={{ delay: (idx % 4) * 0.1 }}
                       >
-                        <div className="group block bg-black border-2 border-gray-light shadow-[4px_4px_0px_0px_#2E2E2E] hover:shadow-[4px_4px_0px_0px_#ccff00] hover:border-neon transition-all duration-300 h-full flex flex-col relative overflow-hidden">
-                          {/* Animated line on hover */}
-                          <div className="absolute top-0 left-0 w-full h-1 bg-neon -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-                          
-                          <div className="p-6 space-y-4 flex-1 flex flex-col">
-                            <div className="flex justify-between items-start">
-                              <h3 className="font-mono text-xl font-bold text-white group-hover:text-neon transition-colors duration-300 flex items-center gap-2">
-                                <GitBranch className="w-5 h-5" />
-                                {repo.name}
-                              </h3>
-                              <div className="flex space-x-3 font-mono text-xs text-gray-400">
-                                {repo.language && (
+                        <GlitchHover className="h-full">
+                          <div className="group block bg-black border-2 border-gray-light shadow-[4px_4px_0px_0px_#2E2E2E] hover:shadow-[4px_4px_0px_0px_#ccff00] hover:border-neon transition-all duration-300 h-full flex flex-col relative overflow-hidden">
+                            {/* Animated line on hover */}
+                            <div className="absolute top-0 left-0 w-full h-1 bg-neon -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                            
+                            <div className="p-6 space-y-4 flex-1 flex flex-col">
+                              <div className="flex justify-between items-start">
+                                <h3 className="font-mono text-xl font-bold text-white group-hover:text-neon transition-colors duration-300 flex items-center gap-2">
+                                  <GitBranch className="w-5 h-5" />
+                                  {repo.name}
+                                </h3>
+                                <div className="flex space-x-3 font-mono text-xs text-gray-400">
+                                  {repo.language && (
+                                    <span className="border border-gray-light px-2 py-1 flex items-center gap-1">
+                                      <Code className="w-3 h-3" />
+                                      {repo.language}
+                                    </span>
+                                  )}
                                   <span className="border border-gray-light px-2 py-1 flex items-center gap-1">
-                                    <Code className="w-3 h-3" />
-                                    {repo.language}
+                                    <Star className="w-3 h-3" />
+                                    {repo.stargazers_count}
                                   </span>
+                                </div>
+                              </div>
+                              <p className="font-body text-gray-400 flex-1">
+                                {repo.description}
+                              </p>
+                              
+                              {/* Actions / Links */}
+                              <div className="pt-4 border-t border-gray-light/50 flex gap-4">
+                                <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-sm font-mono text-gray-400 hover:text-white flex items-center gap-2 transition-colors relative z-20">
+                                  <GitBranch className="w-4 h-4" /> Source
+                                </a>
+                                {repo.homepage && (
+                                  <a href={repo.homepage} target="_blank" rel="noopener noreferrer" className="text-sm font-mono text-neon hover:text-white flex items-center gap-2 transition-colors relative z-20">
+                                    <ExternalLink className="w-4 h-4" /> Live Preview
+                                  </a>
                                 )}
-                                <span className="border border-gray-light px-2 py-1 flex items-center gap-1">
-                                  <Star className="w-3 h-3" />
-                                  {repo.stargazers_count}
-                                </span>
                               </div>
                             </div>
-                            <p className="font-body text-gray-400 flex-1">
-                              {repo.description}
-                            </p>
-                            
-                            {/* Actions / Links */}
-                            <div className="pt-4 border-t border-gray-light/50 flex gap-4">
-                              <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-sm font-mono text-gray-400 hover:text-white flex items-center gap-2 transition-colors">
-                                <GitBranch className="w-4 h-4" /> Source
-                              </a>
-                              {repo.homepage && (
-                                <a href={repo.homepage} target="_blank" rel="noopener noreferrer" className="text-sm font-mono text-neon hover:text-white flex items-center gap-2 transition-colors">
-                                  <ExternalLink className="w-4 h-4" /> Live Preview
-                                </a>
-                              )}
-                            </div>
                           </div>
-                        </div>
+                        </GlitchHover>
                       </motion.div>
                     ))}
                   </div>
                 </section>
+
+                <ActivityHeatmap />
               </motion.div>
             )}
 

@@ -88,6 +88,15 @@ export function CommandMenu() {
             >
               <TerminalSquare className="w-4 h-4 mr-3 text-neon" /> Toggle ASCII Mode
             </Command.Item>
+            <Command.Item
+              onSelect={() => {
+                window.dispatchEvent(new Event('toggle-matrix'));
+                setOpen(false);
+              }}
+              className="flex items-center px-4 py-3 text-sm cursor-pointer text-neon transition-colors"
+            >
+              <Terminal className="w-4 h-4 mr-3 text-neon" /> Toggle Matrix Rain
+            </Command.Item>
           </Command.Group>
         </Command.List>
       </Command>
