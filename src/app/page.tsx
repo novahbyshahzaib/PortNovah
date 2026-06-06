@@ -52,7 +52,7 @@ async function getRepos() {
     name: "AWP",
     description: "Advanced Web Programming application with sophisticated frontend architecture.",
     html_url: "https://github.com/novahbyshahzaib/AWP",
-    homepage: "https://awp-novah.vercel.app", // Placeholder, user didn't provide live link
+    homepage: "https://awp-livid.vercel.app",
     language: "TypeScript",
     stargazers_count: 0,
   });
